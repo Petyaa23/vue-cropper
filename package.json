@@ -21,6 +21,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "vue-advanced-cropper": "^1.11.3",
         "vue-cropperjs": "^5.0.0"
     }
 }

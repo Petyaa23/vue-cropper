@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,5 +34,6 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('image-cropper', [\App\Http\Controllers\ImageController::class, 'index']);
+    Route::get('image-cropper', [ImageController::class, 'index'])->name('image.index');
+    Route::post('save-crop-image', [ImageController::class, 'store'])->name('image.store');
 });
