@@ -1,9 +1,23 @@
 <template>
     <div id="vue-cloudinary-uploader">
-        <input type="hidden" :value="uploadedImageData.secureUrl" :name="inputName">
 
-        <button v-if="uploadedImageData.secureUrl" class="vcu-button button-danger" type="button" @click="deleteImageFromCloud()">Change Image</button>
-        <button id="uploader-button" class="vcu-button button-info" type="button" v-else @click.prevent="showModal()" :disabled="processingUpload || modelVisible">Select Image File</button>
+        <input type="hidden" :value="uploadedImageData.secureUrl">
+
+        <button v-if="uploadedImageData.secureUrl"
+                class="vcu-button button-danger"
+                type="button"
+                @click="deleteImageFromCloud()"
+        >
+            Change Image
+        </button>
+        <button id="uploader-button"
+                class="vcu-button button-info"
+                type="button"
+                v-else @click.prevent="showModal()"
+                :disabled="processingUpload || modelVisible"
+        >
+            Select Image File
+        </button>
 
         <div id="modal-wrapper" v-show="modelVisible">
             <div class="image-cropper">
@@ -30,6 +44,13 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="image-foreach">
+        <img v-for="image in images"
+             :src="image.title"
+             alt=""
+             class="w-[100px] aspect-square object-cover"
+        >
     </div>
 </template>
 
@@ -59,37 +80,19 @@ export default {
         };
     },
     props: {
-        CloudinaryCloudName: {
-            type: String,
-            default: "djx5h4cjt",
-            validator: (x) => x !== ""
-        },
-        cloudinaryUploadPreset: {
-            type: String,
-            default: "misc-images",
-            validator: (x) => x !== ""
-        },
-        aspectRatio: {
-            type: Number,
-            default: 0
-        },
-        inputName: {
-            type: String,
-            default: "imageToUpload"
-        },
-    },
-    mounted(){
-        this.cloudinaryUploadUrl = `save-crop-image`;
-        this.cloudinaryDeleteUrl = `https://api.cloudinary.com/v1_1/${this.CloudinaryCloudName}/delete_by_token`;
+        images: {
+            type: Array,
+            default: []
+        }
     },
     methods: {
-        showModal(){
+        showModal() {
             this.modelVisible = true;
         },
-        hideModal(){
+        hideModal() {
             this.modelVisible = false;
         },
-        editImage(){
+        editImage() {
             this.showImageCropper = true;
             if(this.cropperInstance){
                 this.cropperInstance.destroy();
@@ -100,8 +103,7 @@ export default {
                     aspectRatio: this.aspectRatio,
                     viewMode: 2,
                     background: false,
-                    crop(event) {},
-                    ready(){
+                    ready() {
                         this.showImageCropper = true;
                     }
                 });
@@ -114,7 +116,7 @@ export default {
             }
             let photo = this.$refs.photo.files[0];
             this.localFileDataUrl = window.URL.createObjectURL(photo);
-            this.$nextTick(this.edit  Image());
+            await this.$nextTick(this.editImage());
         },
         async getImageUrl(){
             if(!this.cropperInstance){
@@ -161,20 +163,15 @@ export default {
             this.showUploadProgress = true;
             this.processingUpload = true;
             this.uploadProgress = 0;
-            axios.post(this.cloudinaryUploadUrl, formData, {
+            axios.post('/save-crop-image', formData, {
                 onUploadProgress: (progressEvent) => {
                     this.uploadProgress = progressEvent.lengthComputable ? Math.round( (progressEvent.loaded * 100) / progressEvent.total ) : 0 ;
                 }
             })
                 .then( (response) => {
-                    this.uploadedImageData = {
-                        secureUrl: response.data.secure_url,
-                        deleteToken: response.data.delete_token,
-                        publicId: response.data.public_id
-                    };
+                    this.images.push(response.data.image);
                     this.showUploadProgress = false;
                     this.processingUpload = false;
-                    this.$emit("imageUrl", response.data.secure_url );
                     this.hideModal();
                 })
                 .catch( (error) => {
@@ -208,7 +205,10 @@ export default {
                     return false;
                 })
         }
-    }
+    },
+    // created() {
+    //     console.log(this.images);
+    // }
 }
 </script>
 
@@ -385,7 +385,6 @@ input[type="file"] {
 }
 .image-cropper > .editor > .img {
     position: relative;
-    max-height: -webkit-fill-available;
     padding: var(--default-space-small);
     flex-grow: 1;
     background: var(--color-tertiary);
@@ -431,5 +430,10 @@ img {
 
 .hide {
     display: none !important
+}
+
+.image-foreach {
+    margin: 30px;
+    display: flex;
 }
 </style>
