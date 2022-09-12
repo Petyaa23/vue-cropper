@@ -31,7 +31,7 @@
                         <div class="vcu-progress" :style="'width: ' + uploadProgress + '%'"></div>
                     </div>
                     <div class="img">
-                        <img ref="working_image" id="image" :src="localFileDataUrl">
+                        <img ref="working_image" id="image" :src="localFileDataUrl" alt="">
                     </div>
                 </div>
                 <div class="options">
@@ -123,14 +123,14 @@ export default {
                 alert("Select Image File!");
                 return false;
             }
-            if(!this.cropperInstance.getCroppedCanvas()){
-                alert("No Image Detected!");
-                return false;
-            }
-            if(this.processingUpload){ // don't initiate another upload while one is running
-                alert("Previous upload not completed!");
-                return false;
-            }
+            // if(!this.cropperInstance.getCroppedCanvas()){
+            //     alert("No Image Detected!");
+            //     return false;
+            // }
+            // if(this.processingUpload){ // don't initiate another upload while one is running
+            //     alert("Previous upload not completed!");
+            //     return false;
+            // }
             let canvas = this.cropperInstance.getCroppedCanvas();
             await canvas.toBlob( (blob) => {
                 let formData = new FormData();
@@ -140,11 +140,11 @@ export default {
             })
         },
         destroyUploaderInstance(closeCropper = false){
-            // destroy cropper instance
-            if(this.cropperInstance && closeCropper){
-                this.cropperInstance.destroy();
-            }
-            // set all other variables to their defaults
+            // // destroy cropper instance
+            // if(this.cropperInstance && closeCropper){
+            //     this.cropperInstance.destroy();
+            // }
+            // // set all other variables to their defaults
             this.cropperInstance = null;
             this.localFileDataUrl = "";
             this.processingUpload = false;
@@ -279,25 +279,6 @@ export default {
     z-index: 5;
 }
 
-.close-button:hover {
-    background-color: var(--color-danger-light);
-}
-
-.close-button:active {
-    background-color: var(--color-danger-dark);
-}
-.button-success {
-    background-color: var(--color-success);
-}
-
-.button-success:hover {
-    background-color: var(--color-success-light);
-}
-
-.button-success:active {
-    background-color: var(--color-success-dark);
-}
-
 .button-danger {
     background-color: var(--color-danger);
 }
@@ -373,24 +354,24 @@ export default {
     margin-left: var(--default-space-small);
 }
 
-input[type="file"] {
-    position: relative !important;
-    top: 1% !important;
-    z-index: 1 !important;
-    width: initial !important;
-    height: initial !important;
-    -webkit-appearance: initial !important;
-    opacity: 1 !important;
-    cursor: pointer !important;
-}
-.image-cropper > .editor > .img {
-    position: relative;
-    padding: var(--default-space-small);
-    flex-grow: 1;
-    background: var(--color-tertiary);
-    min-height: 20px;
-    margin-bottom: 20px;
-}
+/*input[type="file"] {*/
+/*    position: relative !important;*/
+/*    top: 1% !important;*/
+/*    z-index: 1 !important;*/
+/*    width: initial !important;*/
+/*    height: initial !important;*/
+/*    -webkit-appearance: initial !important;*/
+/*    opacity: 1 !important;*/
+/*    cursor: pointer !important;*/
+/*}*/
+/*.image-cropper > .editor > .img {*/
+/*    position: relative;*/
+/*    padding: var(--default-space-small);*/
+/*    flex-grow: 1;*/
+/*    background: var(--color-tertiary);*/
+/*    min-height: 20px;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 .image-cropper > .options {
     display: flex;
     flex-direction: row;
