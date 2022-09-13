@@ -1,6 +1,18 @@
 <template>
-    <div id="vue-cloudinary-uploader">
+<!--    <picture-input-->
+<!--        ref="pictureInput"-->
+<!--        :removable="true"-->
+<!--        removeButtonClass="ui red button"-->
+<!--        :height="500"-->
+<!--        accept="image/jpeg, image/png, image/gif"-->
+<!--        buttonClass="ui button primary"-->
+<!--        size="1000"-->
+<!--        :customStrings="-->
+<!--        {upload: '<h1>Upload it!</h1>',-->
+<!--        drag: 'Drag and drop your image here'}">-->
+<!--    </picture-input>-->
 
+    <div id="vue-cloudinary-uploader">
         <input type="hidden" :value="uploadedImageData.secureUrl">
 
         <button v-if="uploadedImageData.secureUrl"
@@ -24,7 +36,10 @@
                 <div class="editor">
                     <div class="input">
                         <div>
-                            <input type="file" ref="photo" accept="image/*" @change="addLocalImage()" id="vcu-file-input">
+                            <input type="file" ref="photo"
+                                   accept="image/*"
+                                   @change="addLocalImage()"
+                                   id="vcu-file-input">
                         </div>
                     </div>
                     <div v-if="showUploadProgress" class="vcu-progress-wrapper">
@@ -44,14 +59,15 @@
                 </div>
             </div>
         </div>
+        <div class="image-foreach">
+            <img v-for="image in images"
+                 :src="image.title"
+                 alt=""
+                 class="w-[20%] h-[20%] m-2"
+            >
+        </div>
     </div>
-    <div class="image-foreach">
-        <img v-for="image in images"
-             :src="image.title"
-             alt=""
-             class="w-[100px] aspect-square object-cover"
-        >
-    </div>
+
 </template>
 
 <script>
@@ -414,7 +430,7 @@ img {
 }
 
 .image-foreach {
-    margin: 30px;
     display: flex;
+    width: 100%;
 }
 </style>
