@@ -41,6 +41,7 @@
                                    @change="addLocalImage()"
                                    id="vcu-file-input">
                         </div>
+                        <span v-if="fileError" class="text-red-400">{{ errorMessage }}</span>
                     </div>
                     <div v-if="showUploadProgress" class="vcu-progress-wrapper">
                         <div class="vcu-progress" :style="'width: ' + uploadProgress + '%'"></div>
@@ -63,7 +64,7 @@
             <img v-for="image in images"
                  :src="image.title"
                  alt=""
-                 class="w-[20%] h-[20%] m-2"
+                 class="w-[10%] h-[10%] m-2 object-fill"
             >
         </div>
     </div>
@@ -92,7 +93,9 @@ export default {
                 deleteToken: "",
                 publicId: "",
                 secureUrl: ""
-            }
+            },
+            fileError: false,
+            errorMessage: ''
         };
     },
     props: {
@@ -103,6 +106,8 @@ export default {
     },
     methods: {
         showModal() {
+            this.errorMessage = '';
+            this.fileError = false;
             this.modelVisible = true;
         },
         hideModal() {
@@ -125,12 +130,25 @@ export default {
                 });
             });
         },
-        async addLocalImage(){
+        async addLocalImage() {
             if(this.$refs.photo.files.length < 1){
                 console.log("No photo selected");
                 return false;
             }
             let photo = this.$refs.photo.files[0];
+
+            // if (photo.size > 0.5 * 1024 * 1024) {
+            //     this.errorMessage = 'File size should be no more than 1 MB';
+            //     this.fileError = true;
+            //     return false;
+            // }
+
+            // if (photo.size > 0.5 * 1024 * 1024) {
+            //     this.errorMessage = 'File size should be no more than 1 MB';
+            //     this.fileError = true;
+            //     return false;
+            // }
+            console.log(photo);
             this.localFileDataUrl = window.URL.createObjectURL(photo);
             await this.$nextTick(this.editImage());
         },
@@ -190,7 +208,8 @@ export default {
                     this.processingUpload = false;
                     this.hideModal();
                 })
-                .catch( (error) => {
+                .catch((error) => {
+                    console.log(error.response.data.message);
                     if(error.response){
                         console.log(error.message);
                     }else{
@@ -319,7 +338,7 @@ export default {
     background-color: var(--color-info-dark);
 }
 #modal-wrapper {
-    width: 80%;
+    width: 70%;
     height: 80%;
     position: fixed;
     top: 10px; bottom: 10px;
@@ -370,24 +389,24 @@ export default {
     margin-left: var(--default-space-small);
 }
 
-/*input[type="file"] {*/
-/*    position: relative !important;*/
-/*    top: 1% !important;*/
-/*    z-index: 1 !important;*/
-/*    width: initial !important;*/
-/*    height: initial !important;*/
-/*    -webkit-appearance: initial !important;*/
-/*    opacity: 1 !important;*/
-/*    cursor: pointer !important;*/
-/*}*/
-/*.image-cropper > .editor > .img {*/
-/*    position: relative;*/
-/*    padding: var(--default-space-small);*/
-/*    flex-grow: 1;*/
-/*    background: var(--color-tertiary);*/
-/*    min-height: 20px;*/
-/*    margin-bottom: 20px;*/
-/*}*/
+input[type="file"] {
+    position: relative !important;
+    top: 1% !important;
+    z-index: 1 !important;
+    width: initial !important;
+    height: initial !important;
+    -webkit-appearance: initial !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
+.image-cropper > .editor > .img {
+    position: relative;
+    padding: var(--default-space-small);
+    flex-grow: 1;
+    background: var(--color-tertiary);
+    min-height: 20px;
+    margin-bottom: 20px;
+}
 .image-cropper > .options {
     display: flex;
     flex-direction: row;

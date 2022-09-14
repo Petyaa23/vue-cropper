@@ -24,17 +24,16 @@ class GetImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,|max:2048|',
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:204',
         ];
     }
 
     public function messages()
     {
         return [
-            'image.required' => 'image is required!',
-            'image.mimes' => 'please upload only jpg,png,jpeg!',
-            'image.max' => 'image max size must by 2mb!',
-
+            'image.required' => 'Image is required!',
+            'image.mimes' => 'Please upload only jpg,png,jpeg!',
+            'image.max' => 'Image max size must by 2 MB!',
         ];
     }
 }
