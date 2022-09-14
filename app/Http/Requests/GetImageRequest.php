@@ -24,7 +24,7 @@ class GetImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg|max:204',
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:3000',
         ];
     }
 
@@ -33,7 +33,7 @@ class GetImageRequest extends FormRequest
         return [
             'image.required' => 'Image is required!',
             'image.mimes' => 'Please upload only jpg,png,jpeg!',
-            'image.max' => 'Image max size must by 2 MB!',
+            'image.max' => 'Image max size must by 3 MB!',
         ];
     }
 }

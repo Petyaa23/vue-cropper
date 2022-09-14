@@ -30,7 +30,7 @@ class ImageController extends Controller
         ]);
 
         return response()->json([
-            'success' => 'Crop Image Saved/Uploaded Successfully using jQuery and Ajax In Laravel',
+            'success' => 'Crop Image Saved/Uploaded Successfully using Vue and Axios In Laravel',
             'image' => $image
         ]);
     }

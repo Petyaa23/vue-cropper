@@ -1,17 +1,4 @@
 <template>
-<!--    <picture-input-->
-<!--        ref="pictureInput"-->
-<!--        :removable="true"-->
-<!--        removeButtonClass="ui red button"-->
-<!--        :height="500"-->
-<!--        accept="image/jpeg, image/png, image/gif"-->
-<!--        buttonClass="ui button primary"-->
-<!--        size="1000"-->
-<!--        :customStrings="-->
-<!--        {upload: '<h1>Upload it!</h1>',-->
-<!--        drag: 'Drag and drop your image here'}">-->
-<!--    </picture-input>-->
-
     <div id="vue-cloudinary-uploader">
         <input type="hidden" :value="uploadedImageData.secureUrl">
 
@@ -41,7 +28,7 @@
                                    @change="addLocalImage()"
                                    id="vcu-file-input">
                         </div>
-                        <span v-if="fileError" class="text-red-400">{{ errorMessage }}</span>
+                        <span v-if="fileError" class="text-red-400 error-span" >{{ errorMessage }}</span>
                     </div>
                     <div v-if="showUploadProgress" class="vcu-progress-wrapper">
                         <div class="vcu-progress" :style="'width: ' + uploadProgress + '%'"></div>
@@ -137,18 +124,22 @@ export default {
             }
             let photo = this.$refs.photo.files[0];
 
-            // if (photo.size > 0.5 * 1024 * 1024) {
-            //     this.errorMessage = 'File size should be no more than 1 MB';
-            //     this.fileError = true;
-            //     return false;
-            // }
+            if (photo.size > 3.0 * 1024 * 1024) {
+                this.errorMessage = 'File size should be no more than 3 MB';
+                this.fileError = true;
+                return false;
+            }
 
-            // if (photo.size > 0.5 * 1024 * 1024) {
-            //     this.errorMessage = 'File size should be no more than 1 MB';
-            //     this.fileError = true;
-            //     return false;
-            // }
-            console.log(photo);
+            let imageType = ['image/jpg','image/jpeg','image/png'];
+            if (imageType.includes(photo.type)) {
+
+
+            } else {
+                this.errorMessage = 'Please you can upload file having extensions .jpeg/.jpg/.png/ only.';
+                this.fileError = true;
+                return false;
+            }
+
             this.localFileDataUrl = window.URL.createObjectURL(photo);
             await this.$nextTick(this.editImage());
         },
@@ -157,14 +148,14 @@ export default {
                 alert("Select Image File!");
                 return false;
             }
-            // if(!this.cropperInstance.getCroppedCanvas()){
-            //     alert("No Image Detected!");
-            //     return false;
-            // }
-            // if(this.processingUpload){ // don't initiate another upload while one is running
-            //     alert("Previous upload not completed!");
-            //     return false;
-            // }
+            if(!this.cropperInstance.getCroppedCanvas()){
+                alert("No Image Detected!");
+                return false;
+            }
+            if(this.processingUpload){ // don't initiate another upload while one is running
+                alert("Previous upload not completed!");
+                return false;
+            }
             let canvas = this.cropperInstance.getCroppedCanvas();
             await canvas.toBlob( (blob) => {
                 let formData = new FormData();
@@ -174,11 +165,11 @@ export default {
             })
         },
         destroyUploaderInstance(closeCropper = false){
-            // // destroy cropper instance
-            // if(this.cropperInstance && closeCropper){
-            //     this.cropperInstance.destroy();
-            // }
-            // // set all other variables to their defaults
+            // destroy cropper instance
+            if(this.cropperInstance && closeCropper){
+                this.cropperInstance.destroy();
+            }
+            // set all other variables to their defaults
             this.cropperInstance = null;
             this.localFileDataUrl = "";
             this.processingUpload = false;
@@ -452,4 +443,5 @@ img {
     display: flex;
     width: 100%;
 }
+
 </style>
