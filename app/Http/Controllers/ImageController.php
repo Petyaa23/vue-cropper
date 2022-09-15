@@ -24,7 +24,7 @@ class ImageController extends Controller
     {
         $name = uniqid() . '.png';
         $path = '/storage/upload/' . $name;
-        $request->file('file')->move(public_path('/storage/upload'), $name);
+        $request->file('image')->move(public_path('/storage/upload'), $name);
         $image = Image::create([
             'title' => $path
         ]);

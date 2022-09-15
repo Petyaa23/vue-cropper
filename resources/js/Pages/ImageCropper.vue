@@ -132,8 +132,6 @@ export default {
 
             let imageType = ['image/jpg','image/jpeg','image/png'];
             if (imageType.includes(photo.type)) {
-
-
             } else {
                 this.errorMessage = 'Please you can upload file having extensions .jpeg/.jpg/.png/ only.';
                 this.fileError = true;
@@ -159,7 +157,7 @@ export default {
             let canvas = this.cropperInstance.getCroppedCanvas();
             await canvas.toBlob( (blob) => {
                 let formData = new FormData();
-                formData.append("file", blob);
+                formData.append("image", blob);
                 formData.append("upload_preset", this.cloudinaryUploadPreset);
                 this.uploadImageToCloud(formData);
             })
